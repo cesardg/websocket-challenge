@@ -20,6 +20,7 @@
     let ballSpeed = 5;
     let scoreM = 0;
     let scoreD = 0;
+    let started = false
 
 
     const servers = {
@@ -36,15 +37,15 @@
       $myCamera.srcObject = myStream;
       $myCamera.onloadedmetadata = () => $myCamera.play();
       document.querySelector("#permission").addEventListener("click", e => checkPermission(e))
-       const url = `${new URL(``, window.location)}`;
-          $url.textContent = url;
-          $url.setAttribute('href', url);
-          const typeNumber = 4;
-          const errorCorrectionLevel = 'L';
-          const qr = qrcode(typeNumber, errorCorrectionLevel);
-          qr.addData(url);
-          qr.make();
-          document.getElementById('qr').innerHTML = qr.createImgTag(4);
+      const url = `${new URL(``, window.location)}`;
+      $url.textContent = url;
+      $url.setAttribute('href', url);
+      const typeNumber = 4;
+      const errorCorrectionLevel = 'L';
+      const qr = qrcode(typeNumber, errorCorrectionLevel);
+      qr.addData(url);
+      qr.make();
+      document.getElementById('qr').innerHTML = qr.createImgTag(4);
     };
 
     const checkPermission = () => {
@@ -142,9 +143,17 @@
         
       })
 
+      window.addEventListener("devicemotion", function (event) {
+        if (Math.abs(event.acceleration.x) > 40 || Math.abs(event.acceleration.y) > 40 || Math.abs(event.acceleration.z) > 40) {
+            peer.send("ragequit")
+        }
+      }, true);
+
       window.addEventListener("deviceorientation", function (event) {
         peer.send(event.beta)
       }, true);
+
+   
     
       peer.on('data', data => {
         globalCor = 'data:' + data
@@ -201,11 +210,26 @@
 
   // game loop
   const loop =  () => {
+
+    console.log(globalCor)
+  
+
+    if (globalCor.split(":")[1] === "ragequit"){
+      document.querySelector('.canv').style.display = "none"
+      document.querySelector('.gameview').innerHTML = `<p class="rage">Mobile player rage quitted. Desktop player wins. <br>Play again</p>`
+      document.querySelector('.gameview').addEventListener('click', function(){location.reload()})
+    }
+
     const usefullCor = parseInt(globalCor.split(":")[1])
 
-    if(!isNaN(usefullCor)){
+    if(!isNaN(usefullCor) && !started){
+      started = true
       document.querySelector(`.link`).style.display = "none";
       document.querySelector(`.canv`).style.display = "block";
+      document.querySelector(`.score`).style.display = "flex";
+      document.querySelector(`.my-camera`).classList.remove("hidden")
+      scoreM = 0;
+      scoreD = 0;
     }
 
     requestAnimationFrame(loop);
@@ -301,7 +325,6 @@
       context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
     }
 
-    console.log(usefullCor)
     if (usefullCor > 60) {
       leftPaddle.dy = paddleSpeed;
     } else if ( usefullCor < 60 && usefullCor > 40 ) {

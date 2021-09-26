@@ -4,17 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pong V2</title>
+  <title>Pong 2</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
   <div class="container">
-    <h1>Pong V2</h1>
+    <h1>Pong 2.0</h1>
     <article class="gameview">
       <h2 class="subtitle">Game view</h2>
       <div class="link">
-        <p>Connect a phone to start and select your device</p>
+        <p>Scan this code with your mobile device and select it from the dropwdown menu.</p>
         <a id="url" href=""></a>
         <div id="qr"></div>
 
@@ -38,15 +38,16 @@
     </article>
 
     <article class="controls">
-      <h2>Use this phone as controller</h2>
+      <h2>Use this phone as a controller</h2>
       <button class="permission" id="permission">
         Give orientation permission
       </button>
       <p class="help">Tilt your phone up and down to control the left paddle</p>
+   
     </article>
     <div class="cams">
-      <video id="myCamera" class="camera my-camera" playsinline autoplay muted></video>
-      <video id="otherCamera" class="camera other-camera" playsinline autoplay muted></video>
+      <video id="myCamera" class="my-camera hidden" playsinline autoplay muted></video>
+      <video id="otherCamera" class="other-camera" playsinline autoplay muted></video>
     </div>
   </div>
 

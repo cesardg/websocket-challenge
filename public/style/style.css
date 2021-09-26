@@ -54,9 +54,13 @@
     }
 
     
- video {
+    video{
       height: 10rem;
       width: auto;
+    }
+
+    .hidden{
+      display: none;
     }
 
     .subtitle{
@@ -64,7 +68,7 @@
     }
 
     .canv{
-      display: block;
+      display: none;
       margin-top: 2rem;
     }
 
@@ -99,11 +103,20 @@
       justify-content: space-between;
       width: 100%;
       font-family: "pixel";
+      display: none;
     }
 
     .score-d{
       text-align: end;
     }
+
+    .rage{
+      font-size: 4rem;
+      text-align: center;
+      cursor: pointer;
+    }
+
+
 
 
 @media only screen and (min-width: 768px) {
