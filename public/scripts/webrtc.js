@@ -9,6 +9,7 @@
     const maxPaddleY = canvas.height - grid - paddleHeight;
     const video1 = document.getElementById('myCamera');
     const video2 = document.getElementById('otherCamera');
+    const sound1 = new Audio('../assets/sound/sound1.mp3');
 
 
     let socket;
@@ -17,6 +18,8 @@
     let globalCor = "data:notStarted";
     let paddleSpeed = 6;
     let ballSpeed = 5;
+    let scoreM = 0;
+    let scoreD = 0;
 
 
     const servers = {
@@ -46,6 +49,8 @@
 
     const checkPermission = () => {
     
+      document.querySelector(`.permission`).style.display = "none"
+      document.querySelector(`.help`).style.display = "block"
       if (typeof DeviceMotionEvent.requestPermission === 'function' && DeviceMotionEvent.requestPermission) {
         // Handle iOS 13+ devices.
         DeviceMotionEvent.requestPermission()
@@ -203,7 +208,6 @@
       document.querySelector(`.canv`).style.display = "block";
     }
 
-
     requestAnimationFrame(loop);
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -248,7 +252,14 @@
     // reset ball if it goes past paddle (but only if we haven't already done so)
     if ((ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
       ball.resetting = true;
-      console.log("eruit")
+      if (ball.dx > 0){
+        scoreM += 1;
+      } else {
+       scoreD += 1;
+      }
+
+      document.querySelector(".score-m").textContent = `score: ${scoreM}`;
+      document.querySelector(".score-d").textContent = `score: ${scoreD}`;
 
       // give some time for the player to recover before launching the ball again
       setTimeout(() => {
@@ -265,6 +276,8 @@
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = leftPaddle.x + leftPaddle.width;
+      sound1.play();
+
     }
     else if (collides(ball, rightPaddle)) {
       ball.dx *= -1;
@@ -272,15 +285,11 @@
       // move ball next to the paddle otherwise the collision will happen again
       // in the next frame
       ball.x = rightPaddle.x - ball.width;
+      sound1.play();
     }
 
     // draw ball
     context.fillRect(ball.x, ball.y, ball.width, ball.height);
-
-
-    var img = document.getElementById("img");
-    img.src = "https://res.cloudinary.com/d4life4221imgcldnrccca/image/upload/v1620050202/dev4mhpimages/zf2t2msz0kqdomzctdgw.png";
-    context.drawImage(img, ball.x, ball.y, ball.width, ball.height);
 
     // draw walls
     context.fillStyle = '#CC6B49';
@@ -292,17 +301,17 @@
       context.fillRect(canvas.width / 2 - grid / 2, i, grid, grid);
     }
 
-    if (usefullCor > 50) {
+    console.log(usefullCor)
+    if (usefullCor > 60) {
       leftPaddle.dy = paddleSpeed;
+    } else if ( usefullCor < 60 && usefullCor > 40 ) {
+      leftPaddle.dy = 0
     } else {
       leftPaddle.dy = -paddleSpeed;
     }
 
-
-   video1.style.transform = `translate(55.5rem, ${((rightPaddle.y-800))/10}rem)`
-   video2.style.transform = `translate(-59rem, ${((leftPaddle.y-800))/10}rem)`
-
-
+   video1.style.transform = `translate(55.5rem, ${((rightPaddle.y-800))/10}rem) rotateY(180deg)`
+   video2.style.transform = `translate(-61.1rem, ${((leftPaddle.y-905))/10}rem) rotateY(180deg)`
   }
 
 
@@ -311,36 +320,22 @@
     e.preventDefault();
 
     // up arrow key
-    if (e.which === 38) {
+    if (e.key === "ArrowUp") {
       rightPaddle.dy = -paddleSpeed;
 
     }
     // down arrow key
-    else if (e.which === 40) {
+    else if (e.key === "ArrowDown") {
       rightPaddle.dy = paddleSpeed;
 
-    }
-
-    // w key
-    if (e.which === 87) {
-      leftPaddle.dy = -paddleSpeed;
-    }
-    // a key
-    else if (e.which === 83) {
-      leftPaddle.dy = paddleSpeed;
     }
   });
 
   // listen to keyboard events to stop the paddle if key is released
   document.addEventListener('keyup', function (e) {
   e.preventDefault();
-    if (e.which === 38 || e.which === 40) {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       rightPaddle.dy = 0;
-
-    }
-
-    if (e.which === 83 || e.which === 87) {
-      leftPaddle.dy = 0;
 
     }
   });

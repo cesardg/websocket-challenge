@@ -77,16 +77,54 @@
       height: 0;
     }
 
+    .permission{
+      padding: 1rem;
+      border: .1rem solid black;
+      background-color: #73BDA8;
+      font-size: 2rem;
+    }
+
+    .help{
+      display: none;
+    }
+
+    .link{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .score{
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-family: "pixel";
+    }
+
+    .score-d{
+      text-align: end;
+    }
+
 
 @media only screen and (min-width: 768px) {
-  /* For desktop: */
+
   .controls{
     display: none;  }
 }
 
 @media only screen and (max-width: 768px) {
-  /* For desktop: */
   .gameview{
-    display: none;  }
+    display: none;  
+  }
+
+  .container, .controls{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  
 }
 
